@@ -21,13 +21,20 @@ def get_cartoons_list():
 
 	"""
 	soup = BeautifulSoup(requests.get(BASE_URL).content, "html.parser")
+	# As the list is embedded inside of a javascript tag we cannot utilise bs4 any further but to find all occurances of script-tags.
 	reg = re.compile("var cartoonList = (\[.*?\]);")
+
+	# Also we have to make the cartoonlist json-readable ie replace single-quotes with double-qoutes
 	scripts = [reg.search(scr.text.replace("'",'"')).group(1) for scr in soup.findAll("script") if reg.search(scr.text)]
 	cartoons_list = []
 	for script in scripts:
+		# Remove anything decorativ/we like tabs, excessive spaces.
 		script = script.replace('\t',"").replace(' "', '"').replace('" ', '"')
+		# Remove trailing colons
 		script = script.replace(",]", "]")
 		cartoons_list.extend(json.loads(script))
+
+	# Ensure no duplicates
 	cartoons_list = [a[0] for a in itertools.groupby(cartoons_list)]
 	return cartoons_list
 
