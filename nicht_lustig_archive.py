@@ -80,6 +80,7 @@ def get_random_bonus_cartoon(count:int = 1):
 		:rtype: list containing str
 
 	"""
+
 	return get_uri(*random.sample(list(filter(lambda cartoon: cartoon['public_bonus'], get_cartoons_list())), count))
 
 def main():
