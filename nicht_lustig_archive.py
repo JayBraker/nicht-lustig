@@ -23,20 +23,22 @@ def get_cartoons_list():
 	cartoons_list = [a[0] for a in itertools.groupby(cartoons_list)]
 	return cartoons_list
 
-def get_uri(cartoon)->list():
+def get_uri(*cartoons)->list():
 	uri_list = []
-	uri_list.append(IMAGE_URL.format(image=cartoon["image"]))
-	if cartoon["public_bonus"]:
-		uri_list.append(BONUS_URL.format(image=cartoon["bonus_image"]))
+	for cartoon in cartoons:
+		uri_list.append(IMAGE_URL.format(image=cartoon["image"]))
+		if cartoon["public_bonus"]:
+			uri_list.append(BONUS_URL.format(image=cartoon["bonus_image"]))
 	return uri_list
 
-def get_random_cartoon():
-	return get_uri(random.choice(get_cartoons_list()))
+def get_random_cartoon(count:int = 1):
+	return get_uri(*random.sample(get_cartoons_list(), count))
 
-def get_random_bonus_cartoon():
-	return get_uri(random.choice(list(filter(lambda cartoon: cartoon['public_bonus'],get_cartoons_list()))))
+def get_random_bonus_cartoon(count:int = 1):
+	return get_uri(*random.sample(list(filter(lambda cartoon: cartoon['public_bonus'], get_cartoons_list())), count))
 
 def main():
 	print(get_random_cartoon())
+
 if __name__ == '__main__':
 	main()
