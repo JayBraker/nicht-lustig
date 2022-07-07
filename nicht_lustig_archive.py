@@ -38,6 +38,9 @@ def get_cartoons_list():
 	cartoons_list = [a[0] for a in itertools.groupby(cartoons_list)]
 	return cartoons_list
 
+def get_bonus_cartoons_list()->list():
+	return list(filter(lambda cartoon: cartoon['public_bonus'], get_cartoons_list()))
+
 def get_uri(*cartoons)->list():
 	"""Produce a list of URIs pointing to every publicly accessible panel for a given cartoon-dictionary as produced by get_cartoon_list().
 
@@ -81,7 +84,15 @@ def get_random_bonus_cartoon(count:int = 1):
 
 	"""
 
-	return get_uri(*random.sample(list(filter(lambda cartoon: cartoon['public_bonus'], get_cartoons_list())), count))
+	return get_uri(*random.sample(get_bonus_cartoons_list(), count))
+
+def get_cartoons_list_by_tag(tag:str)->list():
+	return list(filter(lambda cartoon: tag in cartoon['tags'], get_cartoons_list()))
+
+def get_bonus_cartoons_list_by_tag(tag:str)->list():
+	return list(filter(lambda cartoon: tag in cartoon['tags'], get_bonus_cartoons_list()))
+
+
 
 def main():
 	print(get_random_cartoon())
